@@ -1,4 +1,4 @@
-import {postData} from '../utils/request.util';
+import { postData } from '../utils/request.util';
 
 const crack = (req: any, reply: any) => {
     const USERNAME = process.env.USERNAME ? process.env.USERNAME : 'username';
@@ -8,11 +8,16 @@ const crack = (req: any, reply: any) => {
         username: USERNAME,
         password: 'sdasdad',
     };
-
-    postData(URL, payload).then(data => {
-        console.log(data);
-        reply.code(201).send({ data: data });
-    });
+   
+    postData(URL, payload)
+        .then(data => {
+            console.log(data);
+            reply.code(201).send({ data: data });
+        })
+        .catch(e => {
+            console.log(e);
+            reply.code(e.status).send({ error: e });
+        });
 };
 
 export default { crack };
