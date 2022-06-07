@@ -1,5 +1,5 @@
 // Example POST method implementation:
-const postData = async (url = '', data = {}) => {
+export const postData = async (url = '', data = {}) => {
     // Default options are marked with *
     const response = await fetch(url, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.

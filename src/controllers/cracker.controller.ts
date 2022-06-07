@@ -1,3 +1,5 @@
+import {postData} from '../utils/request.util';
+
 const crack = (req: any, reply: any) => {
     const USERNAME = process.env.USERNAME ? process.env.USERNAME : 'username';
     const URL = process.env.URL ? process.env.URL : '';
