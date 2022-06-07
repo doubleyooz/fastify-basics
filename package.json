@@ -1,0 +1,23 @@
+{
+  "name": "fastify-brute-force",
+  "version": "1.0.0",
+  "description": "let's crack crappy websites",
+  "main": "src/index.ts",
+  "author": "double-yoo",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "set NODE_ENV=dev && nodemon src/index.ts dotenv_config_path=./.env.dev"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "fastify": "^3.29.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.41",
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.8.1",
+    "tsc": "^2.0.4",
+    "typescript": "^4.7.3"
+  }
+}
