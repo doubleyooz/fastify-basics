@@ -12,8 +12,8 @@ const crackPassword = {
         type: 'object',
         additionalProperties: false,
         properties: {
-            min: { type: 'number', minimum: 1, maximum: 15 },
-            max: { type: 'number', minimum: 2, maximum: 20 },
+            min: { type: 'number', minimum: 0, maximum: 15 },
+            max: { type: 'number', minimum: {"$data": "1/min"}, maximum: 20 },
             url: { type: 'string' },
             username: {type: 'string'}
         },

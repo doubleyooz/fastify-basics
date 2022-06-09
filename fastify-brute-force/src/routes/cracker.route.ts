@@ -1,5 +1,5 @@
-import crackerController from "../controllers/cracker.controller";
-import crackerSchema from "../schemas/cracker.schema";
+import crackerController from '../controllers/cracker.controller';
+import crackerSchema from '../schemas/cracker.schema';
 
 const app = (fastify: any, options: any, done: any) => {
     fastify.post(`/password`, {
@@ -9,4 +9,4 @@ const app = (fastify: any, options: any, done: any) => {
     done();
 };
 
-export default app
+export default app;

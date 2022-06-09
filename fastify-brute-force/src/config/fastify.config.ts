@@ -21,7 +21,7 @@ function ajvPlugin(ajv, options) {
 
 //const app = fastify({ logger: true, ajv: { plugins: [ajvPlugin] } });
 
-const app = fastify({ logger: true });
+const app = fastify({ logger: true, ajv: { customOptions: { $data: true } } });
 //app.register(cors);
 
 //app.register(swagger, swaggerConfig);
