@@ -18,16 +18,22 @@ const crack = async (req: any, reply: any) => {
     let i = 0,
         j = 0;
 
-    const fun = (length: number, str: string): string => {
+    const fun = (minLength: number, maxLength: number, str: string): string => {
         console.log(`${i}: '${str}'`);
         i++;
         characters.forEach(char => {
-            return length > 0 ? fun(length - 1, str + char) : str;
+            if (minLength > 0)
+                return fun(minLength - 1, maxLength - 1, str + char);
+            else return maxLength > 0 ? fun(0, maxLength - 1, str + char) : str;
         });
         return str;
     };
 
-    return reply.code(200).send({ result: fun(max, startsWith ? startsWith : '') });
+    return reply
+        .code(200)
+        .send({
+            result: fun(min ? min : 0, max, startsWith ? startsWith : ''),
+        });
 };
 
 export default { crack };
