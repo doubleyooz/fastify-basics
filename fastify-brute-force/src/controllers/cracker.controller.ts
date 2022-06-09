@@ -3,7 +3,7 @@ import { characters } from '../utils/password.util';
 import { postData } from '../utils/request.util';
 
 const crack = async (req: any, reply: any) => {
-    const { username, url, min, max }: Request = req.body;
+    const { username, url, min, max, startsWith }: Request = req.body;
 
     const URL = process.env.URL ? process.env.URL : '';
 
@@ -22,20 +22,12 @@ const crack = async (req: any, reply: any) => {
         console.log(`${i}: '${str}'`);
         i++;
         characters.forEach(char => {
-            return length > min ? fun(length - 1, str + char) : str;
+            return length > 0 ? fun(length - 1, str + char) : str;
         });
         return str;
     };
 
-    const getBlanks = (): string => {
-        let str = '';
-        for (let i = 0; i < min; i++) {
-            str += ' ';
-        }
-        return str;
-    };
-
-    return reply.code(200).send({ result: fun(max, '') });
+    return reply.code(200).send({ result: fun(max, startsWith ? startsWith : '') });
 };
 
 export default { crack };

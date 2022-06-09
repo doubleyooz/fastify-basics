@@ -1,9 +1,18 @@
 export interface Request {
-    min: number;
+    min?: number;
     max: number;
     url?: string;
     username?: string;
+    startsWith?: string;
 }
+
+const props = {
+    min: { type: 'number', minimum: 0, maximum: 15 },
+    max: { type: 'number', minimum: { $data: '1/min' }, maximum: 20 },
+    url: { type: 'string' },
+    username: { type: 'string' },
+    startsWith: { type: 'string' },
+};
 
 const crackPassword = {
     summary: 'Crack Password via brute force',
@@ -11,13 +20,8 @@ const crackPassword = {
     body: {
         type: 'object',
         additionalProperties: false,
-        properties: {
-            min: { type: 'number', minimum: 0, maximum: 15 },
-            max: { type: 'number', minimum: {"$data": "1/min"}, maximum: 20 },
-            url: { type: 'string' },
-            username: {type: 'string'}
-        },
-        required: ['min', 'max'],
+        properties: props,
+        required: ['max'],
     },
 
     response: {
@@ -26,7 +30,7 @@ const crackPassword = {
             properties: {
                 password: { type: 'string' },
             },
-        },      
+        },
     },
 };
 
