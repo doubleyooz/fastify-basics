@@ -1,15 +1,15 @@
-import fastify from 'fastify'
+import { app } from "./config/fastify.config";
 
-const server = fastify()
-
-server.get('/ping', async (request, reply) => {
-  return 'pong\n'
-})
-
-server.listen(8080, (err, address) => {
-  if (err) {
-    console.error(err)
-    process.exit(1)
+const PORT = process.env.PORT ? process.env.PORT : 5000;
+console.log(process.env.PORT);
+const start = async () => {
+  try {
+    await app.listen(PORT);
+  } catch (error) {
+    console.log(error);
+    app.log.error(error);
+    process.exit(1);
   }
-  console.log(`Server listening at ${address}`)
-})
+};
+
+start();
