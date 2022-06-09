@@ -1,6 +1,7 @@
+import { characters } from '../utils/password.util';
 import { postData } from '../utils/request.util';
 
-const crack = (req: any, reply: any) => {
+const crack = async (req: any, reply: any) => {
     const USERNAME = process.env.USERNAME ? process.env.USERNAME : 'username';
     const URL = process.env.URL ? process.env.URL : '';
 
@@ -8,16 +9,19 @@ const crack = (req: any, reply: any) => {
         username: USERNAME,
         password: 'sdasdad',
     };
-   
-    postData(URL, payload)
-        .then(data => {
-            console.log(data);
-            reply.code(201).send({ data: data });
-        })
-        .catch(e => {
-            console.log(e);
-            reply.code(e.status).send({ error: e });
+    let i = 0,
+        j = 0;
+
+    const fun = (length: number, str: string): string => {
+        console.log(`${i}: '${str}'`);
+        i++;
+        characters.forEach(char => {
+            return length > 0 ? fun(length - 1, str + char) : str;
         });
+        return str;
+    };
+
+    reply.code(200).send({ result: fun(3, '') });
 };
 
 export default { crack };
