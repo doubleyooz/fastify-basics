@@ -2,6 +2,7 @@ import fastify from 'fastify';
 //import cors from '@fastify/cors';
 
 import appRoute from '../routes/app.route';
+import userRoute from '../routes/user.route';
 
 //import swaggerConfig from './swagger.config';
 /*
@@ -26,5 +27,6 @@ const app = fastify({ logger: true });
 //app.register(swagger, swaggerConfig);
 
 app.register(appRoute);
+app.register(userRoute);
 
 export { app };
