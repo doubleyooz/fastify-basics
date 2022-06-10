@@ -1,10 +1,12 @@
-import { IUser } from "../models/user.model";
-
+import User, { IUser } from '../models/user.model';
 
 const store = async (req: any, reply: any) => {
-    const {email, password, name} : IUser = req.body;
+    const { email, password, name }: IUser = req.body;
 
-    return reply.code(200).send({data: 'okay'})
-}
+    if (await User.exists({ email: email }))
+        return reply.code(400).send({ error: 'duplicate key' });
 
-export default {store}
+    return reply.code(200).send({ data: 'okay' });
+};
+
+export default { store };

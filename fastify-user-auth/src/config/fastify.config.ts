@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import mongoose from 'mongoose';
 //import cors from '@fastify/cors';
 
 import appRoute from '../routes/app.route';
@@ -25,6 +26,8 @@ const app = fastify({ logger: true });
 //app.register(cors);
 
 //app.register(swagger, swaggerConfig);
+
+mongoose.connect(`${process.env.DB_CONNECTION}`);
 
 app.register(appRoute);
 app.register(userRoute);
