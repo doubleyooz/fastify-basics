@@ -1,4 +1,4 @@
-const body = (props: any) => {
+const schema = (props: any) => {
     return {
         type: 'object',
         additionalProperties: false,
@@ -29,7 +29,7 @@ const props = {
 const store = {
     summary: 'creates a new user and store it',
     consumes: ['application/json'],
-    body: body(props),
+    body: schema(props),
     response: {
         200: {
             type: 'object',
@@ -44,8 +44,8 @@ const store = {
 const findOne = {
     summary: 'returns a user from the database',
     consumes: ['application/json'],
-
-    queryString: body({ email: props.email }),
+   
+    querystring: schema({ email: props.email }),
     response: {
         200: {
             type: 'object',
