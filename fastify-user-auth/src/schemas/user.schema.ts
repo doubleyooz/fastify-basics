@@ -35,9 +35,32 @@ const store = {
             type: 'object',
             properties: {
                 data: { type: 'string' },
+                message: { type: 'string' },
             },
         },
     },
 };
 
-export default { store };
+const findOne = {
+    summary: 'returns a user from the database',
+    consumes: ['application/json'],
+
+    queryString: body({ email: props.email }),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                data: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string' },
+                        email: { type: 'string' },
+                    },
+                },
+                message: { type: 'string' },
+            },
+        },
+    },
+};
+
+export default { store, findOne };
