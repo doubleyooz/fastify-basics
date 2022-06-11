@@ -5,7 +5,7 @@ const signIn = async (req: any, reply: any) => {
     const [hashType, hash] = req.headers.authorization.split(' ');
 
     if (hashType !== 'Basic') {
-        return reply.code(401).send({message: "Unauthorized Request"});
+        return reply.code(401).send({ message: 'Unauthorized Request' });
     }
 
     const [email, supposedPassword] = Buffer.from(hash, 'base64')
@@ -20,18 +20,17 @@ const signIn = async (req: any, reply: any) => {
     const match = user ? matchPassword(user.password, supposedPassword) : false;
 
     if (!match) {
-        return reply.code(401).send({
+        reply.code(401).send({
             message: 'Unauthorized request.',
         });
     }
 
-    const token = reply.jwtSign({
+    const token = await reply.jwtSign({
         email: email,
         tokenVersion: user?.tokenVersion,
     });
-    return reply
-        .code(200)
-        .send({ message: 'Successful login.', accessToken: token });
+    reply.code(200).send({ message: 'Successful login.', accessToken: token });
+    return reply;
 };
 
 export default { signIn };
