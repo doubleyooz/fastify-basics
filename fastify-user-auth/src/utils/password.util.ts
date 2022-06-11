@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 export const hashPassword = async (password: string, salt?: number) => {
     return await bcrypt.hash(
         password,
-        salt ? salt : Number(process.env.HASH_SALT),
+        salt ? salt : process.env.HASH_SALT ? Number(process.env.HASH_SALT) : 10,
     );
 };
 
