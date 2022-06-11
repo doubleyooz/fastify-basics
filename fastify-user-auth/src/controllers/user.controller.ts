@@ -25,11 +25,11 @@ const store = async (req: any, reply: any) => {
                     message: 'Email already in use',
                     err: err,
                 });
-            }
-            reply.code(400).send({
-                message: 'Bad Request',
-                err: err,
-            });
+            } else
+                reply.code(400).send({
+                    message: 'Bad Request',
+                    err: err,
+                });
         });
     return reply;
 };
@@ -40,8 +40,10 @@ const findOne = async (req: any, reply: any) => {
     User.findOne({ email })
         .then(result => {
             if (!result) reply.code(404).send({ message: 'Not found' });
-
-            reply.code(200).send({ message: 'User retrieved.', data: result });
+            else
+                reply
+                    .code(200)
+                    .send({ message: 'User retrieved.', data: result });
         })
         .catch(err => {
             console.log(err);
@@ -50,4 +52,25 @@ const findOne = async (req: any, reply: any) => {
     return reply;
 };
 
-export default { store, findOne };
+const update = async (req: any, reply: any) => {
+    const { email }: { email: string } = req.body;
+    delete req.body.email;
+
+    User.updateOne({ email }, req.body)
+        .then(result => {
+            if (result.matchedCount === 0)
+                reply.code(404).send({ message: 'Not found' });
+            else
+                reply
+                    .code(200)
+                    .send({ message: 'User updated.', data: result });
+        })
+        .catch(err => {
+            console.log(err);
+            reply.code(500).send({ error: err });
+        });
+
+    return reply;
+};
+
+export default { store, findOne, update };

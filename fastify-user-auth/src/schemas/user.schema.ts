@@ -9,6 +9,18 @@ const schema = (props: any) => {
     };
 };
 
+const looseSchema = (props: any) => {
+    return {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+            ...props,
+        },
+        required: ['email'],
+        anyOf: [{ required: ['name']}],
+    };
+};
+
 const props = {
     email: {
         type: 'string',
@@ -44,7 +56,7 @@ const store = {
 const findOne = {
     summary: 'returns a user from the database',
     consumes: ['application/json'],
-   
+
     querystring: schema({ email: props.email }),
     response: {
         200: {
@@ -63,4 +75,19 @@ const findOne = {
     },
 };
 
-export default { store, findOne };
+const update = {
+    summary: 'update an existing user',
+    consumes: ['application/json'],
+    body: looseSchema({ email: props.email, name: props.name }),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                data: { type: 'string' },
+                message: { type: 'string' },
+            },
+        },
+    },
+};
+
+export default { store, findOne, update };

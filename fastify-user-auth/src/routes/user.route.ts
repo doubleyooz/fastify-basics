@@ -10,6 +10,11 @@ const app = (fastify: any, options: any, done: any) => {
         schema: UserSchema.findOne,
         handler: UserController.findOne,
     });
+
+    fastify.put(`/users`, {
+        schema: UserSchema.update,
+        handler: UserController.update,
+    });
     done();
 };
 
