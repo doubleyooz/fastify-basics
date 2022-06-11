@@ -1,7 +1,7 @@
 import fastify from 'fastify';
 import mongoose from 'mongoose';
 import fastifyjwt from '@fastify/jwt';
-//import cors from '@fastify/cors';
+import cors from '@fastify/cors';
 
 import appRoute from '../routes/app.route';
 import userRoute from '../routes/user.route';
@@ -25,12 +25,12 @@ function ajvPlugin(ajv, options) {
 //const app = fastify({ logger: true, ajv: { plugins: [ajvPlugin] } });
 
 const app = fastify({ logger: true });
-//app.register(cors);
+app.register(cors);
 
 //app.register(swagger, swaggerConfig);
 
 mongoose.connect(`${process.env.DB_CONNECTION}`);
-app.register(fastifyjwt, {secret: `${process.env.ACCESS_TOKEN_SECRET}`});
+app.register(fastifyjwt, { secret: `${process.env.ACCESS_TOKEN_SECRET}` });
 app.register(appRoute);
 app.register(userRoute);
 app.register(authRoute);
