@@ -21,8 +21,8 @@ const props = {
     },
     name: {
         type: 'string',
-        min: 3,
-        max: 15,
+        minLength: 3,
+        maxLength: 15,
     },
 };
 
