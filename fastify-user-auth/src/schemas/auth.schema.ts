@@ -35,7 +35,7 @@ const signIn = {
         200: {
             type: 'object',
             properties: {
-                data: { type: 'string' },
+                accessToken: { type: 'string' },
                 message: { type: 'string' },
             },
         },

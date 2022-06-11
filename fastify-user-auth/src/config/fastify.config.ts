@@ -5,6 +5,7 @@ import fastifyjwt from '@fastify/jwt';
 
 import appRoute from '../routes/app.route';
 import userRoute from '../routes/user.route';
+import authRoute from '../routes/auth.route';
 
 //import swaggerConfig from './swagger.config';
 /*
@@ -32,5 +33,6 @@ mongoose.connect(`${process.env.DB_CONNECTION}`);
 app.register(fastifyjwt, {secret: `${process.env.ACCESS_TOKEN_SECRET}`});
 app.register(appRoute);
 app.register(userRoute);
+app.register(authRoute);
 
 export { app };
