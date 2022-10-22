@@ -1,0 +1,21 @@
+{
+    "name": "fastify-sequelize-link",
+    "version": "1.0.0",
+    "description": "a simple example using fastify",
+    "main": "src/index.js",
+    "author": "doubleyooz",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "start": "set NODE_ENV=prod&& node -r dotenv/config src/index",
+        "start:dev": "set NODE_ENV=dev&& nodemon -r dotenv/config --watch src src/index.js",
+        "test": "set NODE_ENV=e2e&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test",
+        "test:clear": "yarn jest --clear-cache",
+        "test:e2e": "set NODE_ENV=e2e&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test/specs/e2e",
+        "test:unit": "set NODE_ENV=unit&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test/specs/unit"
+    },
+    "dependencies": {
+        "dotenv": "^16.0.3",
+        "fastify": "^4.9.2"
+    }
+}
