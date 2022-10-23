@@ -4,7 +4,7 @@ const PORT = process.env.PORT ? process.env.PORT : 5000;
 console.log(process.env.PORT);
 const start = async () => {
     try {
-        await app.listen(PORT);
+        await app.listen({port: PORT});
     } catch (error) {
         console.log(error);
         app.log.error(error);
