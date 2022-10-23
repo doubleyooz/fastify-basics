@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+    link-server: 
+        container_name: link-server
+        build: 
+            context: .
+            
+        depends_on:
+        -   postgres 
+        volumes:
+        - .:/usr/v
+        networks:
+        - links-server
+
+    postgres:
+        container_name: postgres_container
+        image: postgres
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASS}
+            POSTGRES_DB: ${DB_NAME}
+            DATABASE_TEST_NAME: ${DB_TEST_NAME}
+            PGDATA: /data/postgres
+        volumes:
+            - ./postgres:/data/postgres
+            - ./src/database/scripts:/docker-entrypoint-initdb.d/
+
+        ports:
+            - '${DB_PORT}:${DB_PORT}'
+        networks:
+            - links-server
+        restart: unless-stopped
+
+networks:
+    links-server:
+        driver: bridge
+
+volumes:
+    postgres:

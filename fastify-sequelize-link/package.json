@@ -12,10 +12,18 @@
         "test": "set NODE_ENV=e2e&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test",
         "test:clear": "yarn jest --clear-cache",
         "test:e2e": "set NODE_ENV=e2e&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test/specs/e2e",
-        "test:unit": "set NODE_ENV=unit&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test/specs/unit"
+        "test:unit": "set NODE_ENV=unit&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watchAll --detectOpenHandles --no-cache --runInBand ./test/specs/unit",
+        "dc:up": "docker-compose --env-file .env.dev up",
+        "dc:down": "docker-compose --env-file .env.dev down",
+        "dc:deepdown": "yarn dc:delete:volumes && yarn dc:delete:postgres",
+        "dc:stop": "docker-compose --env-file .env.dev stop",
+        "dc:delete:volumes": "docker-compose --env-file .env.dev down -v",
+        "dc:delete:postgres": "rmdir /s .\\postgres"
     },
     "dependencies": {
         "dotenv": "^16.0.3",
-        "fastify": "^4.9.2"
+        "fastify": "^4.9.2",
+        "pg": "^8.8.0",
+        "sequelize": "^6.25.3"
     }
 }
