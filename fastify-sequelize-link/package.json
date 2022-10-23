@@ -19,12 +19,17 @@
         "dc:deepdown": "yarn dc:delete:volumes && yarn dc:delete:postgres",
         "dc:stop": "docker-compose --env-file .env.dev stop",
         "dc:delete:volumes": "docker-compose --env-file .env.dev down -v",
-        "dc:delete:postgres": "rmdir /s .\\postgres"
+        "dc:delete:postgres": "rmdir /s .\\postgres",
+        "migrate:up": "yarn sequelize-cli db:migrate",
+        "migrate:undo": "yarn sequelize-cli db:migrate:undo"
     },
     "dependencies": {
         "dotenv": "^16.0.3",
         "fastify": "^4.9.2",
         "pg": "^8.8.0",
         "sequelize": "^6.25.3"
+    },
+    "devDependencies": {
+        "sequelize-cli": "^6.5.1"
     }
 }
