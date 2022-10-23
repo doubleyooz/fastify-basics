@@ -7,11 +7,14 @@ services:
             context: .
             
         depends_on:
-        -   postgres 
+        -   postgres
+        ports:
+        - "${PORT}:${PORT}" 
+        restart: always
         volumes:
-        - .:/usr/v
+        - ./src:/app/src
         networks:
-        - links-server
+        - links
 
     postgres:
         container_name: postgres_container
@@ -27,13 +30,13 @@ services:
             - ./src/database/scripts:/docker-entrypoint-initdb.d/
 
         ports:
-            - '${DB_PORT}:${DB_PORT}'
+            - "${DB_PORT}:${DB_PORT}"
         networks:
-            - links-server
+            - links
         restart: unless-stopped
 
 networks:
-    links-server:
+    links:
         driver: bridge
 
 volumes:
