@@ -16,8 +16,12 @@ const Link = sequelize.define('Link', {
     },
     userInfo: {
         type: DataTypes.STRING,
-       
     },
+    shortcut: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+
     link: {
         type: DataTypes.STRING,
         allowNull: false,

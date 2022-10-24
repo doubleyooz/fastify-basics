@@ -33,6 +33,10 @@ module.exports = {
                 type: Sequelize.TEXT,
                 allowNull: false,
             }),
+            queryInterface.addColumn('Links', 'shortcut', {
+                type: Sequelize.TEXT,
+                allowNull: false,
+            }),
             queryInterface.addColumn('Links', 'userInfo', {
                 type: Sequelize.INTEGER,
                 allowNull: true,
