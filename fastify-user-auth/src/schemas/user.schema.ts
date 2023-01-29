@@ -1,3 +1,5 @@
+import { email, name, password } from '../utils/schema.util';
+
 const schema = (props: any) => {
     return {
         type: 'object',
@@ -17,31 +19,14 @@ const looseSchema = (props: any) => {
             ...props,
         },
         required: ['email'],
-        anyOf: [{ required: ['name']}],
+        anyOf: [{ required: ['name'] }],
     };
-};
-
-const props = {
-    email: {
-        type: 'string',
-        pattern:
-            "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-    },
-    password: {
-        type: 'string',
-        pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
-    },
-    name: {
-        type: 'string',
-        minLength: 3,
-        maxLength: 15,
-    },
 };
 
 const store = {
     summary: 'creates a new user and store it',
     consumes: ['application/json'],
-    body: schema(props),
+    body: schema({ email, name, password }),
     response: {
         200: {
             type: 'object',
@@ -57,7 +42,7 @@ const findOne = {
     summary: 'returns a user from the database',
     consumes: ['application/json'],
 
-    querystring: schema({ email: props.email }),
+    querystring: schema({ email: email }),
     response: {
         200: {
             type: 'object',
@@ -78,7 +63,7 @@ const findOne = {
 const update = {
     summary: 'update an existing user',
     consumes: ['application/json'],
-    body: looseSchema({ email: props.email, name: props.name }),
+    body: looseSchema({ email, name }),
     response: {
         200: {
             type: 'object',

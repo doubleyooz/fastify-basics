@@ -25,12 +25,71 @@ const signIn = async (req: any, reply: any) => {
         });
     }
 
-    const token = await reply.jwtSign({
+    const token = await reply.accessJwtSign({
         email: email,
         tokenVersion: user?.tokenVersion,
     });
+
+    const refreshToken = await reply.refreshJwtSign({
+        _id: user?._id,
+        tokenVersion: user?.tokenVersion,
+    });
+
+    req.headers.authorization = `Bearer ${token}`;
+    console.log(refreshToken);
+
+    reply.setCookie('jid', refreshToken, {
+        domain: '',
+        path: '/',
+        httpOnly: true,
+    });
+    console.log('here2');
+
     reply.code(200).send({ message: 'Successful login.', accessToken: token });
     return reply;
 };
 
-export default { signIn };
+const revokeRefreshToken = async (req: any, reply: any) => {
+    const refreshToken = req.cookies.jid;
+
+    if (!refreshToken) return reply.code(401).send({ message: 'Unauthorized' });
+
+    let payload: any = null;
+
+    try {
+        payload = req.acessJwtVerify(refreshToken);
+    } catch (err) {
+        return reply.status(401).send({ message: 'Unauthorized.' });
+    }
+
+    if (!payload) return reply.status(401).send({ message: 'Unauthorized.' });
+
+    User.findById(payload._id)
+        .then(user => {
+            if (user) {
+                user.tokenVersion! += 1;
+                user.save()
+                    .then(result => {
+                        return reply.status(200).send({
+                            message: 'Successful Request.',
+                        });
+                    })
+                    .catch(err => {
+                        return reply.status(500).send({
+                            message: "It's not you it's us.",
+                        });
+                    });
+            } else {
+                return reply.status(401).send({
+                    message: 'Unauthorized',
+                });
+            }
+        })
+        .catch(err => {
+            return reply.status(401).send({
+                message: 'Unauthorized',
+            });
+        });
+};
+
+export default { signIn, revokeRefreshToken };

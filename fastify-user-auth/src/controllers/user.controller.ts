@@ -13,6 +13,7 @@ const store = async (req: any, reply: any) => {
     newUser
         .save()
         .then(result => {
+            console.log(result);
             reply.code(201).send({
                 data: { email: result.email, _id: result._id },
                 message: 'User created!',

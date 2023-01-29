@@ -1,3 +1,5 @@
+import { email, password, Authorization } from "../utils/schema.util";
+
 const schema = (props: any) => {
     return {
         type: 'object',
@@ -9,28 +11,11 @@ const schema = (props: any) => {
     };
 };
 
-const props = {
-    email: {
-        type: 'string',
-        pattern:
-            "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-    },
-    password: {
-        type: 'string',
-        pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})',
-    },
-    Authorization: {
-        type: 'string',
-        minLength: 10,
-        description: 'Bearer token of the user.',
-    },
-};
-
 const signIn = {
     summary:
         'Validate the provided email and password, it will return an access token if it passes the validation',
     consumes: ['application/json'],
-    headers: schema({ Authorization: props.Authorization }),
+    headers: schema({ Authorization: Authorization }),
     response: {
         200: {
             type: 'object',
@@ -42,4 +27,19 @@ const signIn = {
     },
 };
 
-export default { signIn };
+const revokeToken = {
+    summary:
+        "Revoke user's refresh tokens, it will be succesful if it receives a valid refresh token",
+    consumes: ['application/json'],
+    headers: schema({ Authorization: Authorization }),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                message: { type: 'string' },
+            },
+        },
+    },
+};
+
+export default { signIn, revokeToken };
