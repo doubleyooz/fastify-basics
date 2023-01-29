@@ -63,7 +63,7 @@ const findOne = {
 const update = {
     summary: 'update an existing user',
     consumes: ['application/json'],
-    body: looseSchema({ email, name }),
+    body: looseSchema({ name }),
     response: {
         200: {
             type: 'object',

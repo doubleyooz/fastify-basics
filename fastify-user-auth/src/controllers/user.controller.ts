@@ -54,17 +54,16 @@ const findOne = async (req: any, reply: any) => {
 };
 
 const update = async (req: any, reply: any) => {
-    const { email }: { email: string } = req.body;
-    delete req.body.email;
+    const metadata = req.newToken ? {accessToken: req.newToken} : {};
 
-    User.updateOne({ email }, req.body)
+    User.updateOne({ _id: req.auth }, req.body)
         .then(result => {
             if (result.matchedCount === 0)
-                reply.code(404).send({ message: 'Not found' });
+                reply.code(404).send({ message: 'Not found', ...metadata });
             else
                 reply
                     .code(200)
-                    .send({ message: 'User updated.', data: result });
+                    .send({ message: 'User updated.', ...metadata });
         })
         .catch(err => {
             console.log(err);

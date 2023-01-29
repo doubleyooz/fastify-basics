@@ -1,4 +1,5 @@
 import UserController from '../controllers/user.controller';
+import AuthMiddleware from '../middlewares/auth.middleware';
 import UserSchema from '../schemas/user.schema';
 
 const app = (fastify: any, options: any, done: any) => {
@@ -13,7 +14,9 @@ const app = (fastify: any, options: any, done: any) => {
 
     fastify.put(`/users`, {
         schema: UserSchema.update,
+        preHandler: AuthMiddleware.auth,
         handler: UserController.update,
+        
     });
     done();
 };

@@ -26,13 +26,15 @@ const signIn = async (req: any, reply: any) => {
     }
 
     const token = await reply.accessJwtSign({
-        email: email,
+        _id: user?._id,
         tokenVersion: user?.tokenVersion,
+        exp: Math.floor(Date.now() / 1000) + 60 * 15, // 15 minutes
     });
 
     const refreshToken = await reply.refreshJwtSign({
         _id: user?._id,
         tokenVersion: user?.tokenVersion,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60, //1 hour
     });
 
     req.headers.authorization = `Bearer ${token}`;
@@ -59,10 +61,10 @@ const revokeRefreshToken = async (req: any, reply: any) => {
     try {
         payload = req.acessJwtVerify(refreshToken);
     } catch (err) {
-        return reply.status(401).send({ message: 'Unauthorized.' });
+        return reply.code(401).send({ message: 'Unauthorized.' });
     }
 
-    if (!payload) return reply.status(401).send({ message: 'Unauthorized.' });
+    if (!payload) return reply.code(401).send({ message: 'Unauthorized.' });
 
     User.findById(payload._id)
         .then(user => {
@@ -70,23 +72,23 @@ const revokeRefreshToken = async (req: any, reply: any) => {
                 user.tokenVersion! += 1;
                 user.save()
                     .then(result => {
-                        return reply.status(200).send({
+                        return reply.code(200).send({
                             message: 'Successful Request.',
                         });
                     })
                     .catch(err => {
-                        return reply.status(500).send({
+                        return reply.code(500).send({
                             message: "It's not you it's us.",
                         });
                     });
             } else {
-                return reply.status(401).send({
+                return reply.code(401).send({
                     message: 'Unauthorized',
                 });
             }
         })
         .catch(err => {
-            return reply.status(401).send({
+            return reply.code(401).send({
                 message: 'Unauthorized',
             });
         });
