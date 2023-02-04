@@ -59,7 +59,7 @@ const revokeRefreshToken = async (req: any, reply: any) => {
     let payload: any = null;
 
     try {
-        payload = req.acessJwtVerify(refreshToken);
+        payload = req.accessJwtVerify(refreshToken);
     } catch (err) {
         return reply.code(401).send({ message: 'Unauthorized.' });
     }
