@@ -6,7 +6,7 @@ export const email = {
 
 export const password = {
     type: 'string',
-    pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$",
+    pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$',
     //pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
 };
 
@@ -14,6 +14,10 @@ export const name = {
     type: 'string',
     minLength: 3,
     maxLength: 15,
+};
+
+export const profile = {
+    type: 'string',
 };
 
 export const Authorization = {
