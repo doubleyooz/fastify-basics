@@ -37,6 +37,7 @@ mongoose.connect(`${process.env.DB_CONNECTION}`);
 app.register(fastifyjwt, {
     secret: `${process.env.REFRESH_TOKEN_SECRET}`,
     namespace: 'refresh',
+    cookie: { cookieName: 'jid', signed: false },
 });
 app.register(fastifyjwt, {
     secret: `${process.env.ACCESS_TOKEN_SECRET}`,

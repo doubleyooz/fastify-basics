@@ -12,6 +12,11 @@ const app = (fastify: any, options: any, done: any) => {
         handler: AuthController.revokeRefreshToken,
     });
 
+    fastify.get(`/refresh-token`, {
+        schema: AuthSchema.refreshToken,
+        handler: AuthController.refreshAccessToken,
+    });
+
     done();
 };
 

@@ -1,4 +1,4 @@
-import { email, password, Authorization } from "../utils/schema.util";
+import { email, password, Authorization } from '../utils/schema.util';
 
 const schema = (props: any) => {
     return {
@@ -31,7 +31,6 @@ const revokeToken = {
     summary:
         "Revoke user's refresh tokens, it will be succesful if it receives a valid refresh token",
     consumes: ['application/json'],
-    headers: schema({ Authorization: Authorization }),
     response: {
         200: {
             type: 'object',
@@ -42,4 +41,19 @@ const revokeToken = {
     },
 };
 
-export default { signIn, revokeToken };
+const refreshToken = {
+    summary:
+        "Revoke user's refresh tokens, it will be succesful if it receives a valid refresh token",
+    consumes: ['application/json'],
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                message: { type: 'string' },
+                accessToken: { type: 'string' },
+            },
+        },
+    },
+};
+
+export default { refreshToken, revokeToken, signIn };
