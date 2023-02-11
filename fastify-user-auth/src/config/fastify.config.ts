@@ -28,6 +28,7 @@ function ajvPlugin(ajv, options) {
 const app = fastify({ logger: true });
 app.register(cors, {
     origin: [`${process.env.CLIENT}`, `${process.env.CLIENT2}`],
+    credentials: true,
 });
 app.register(fastifyCookie, {
     hook: 'onRequest',
