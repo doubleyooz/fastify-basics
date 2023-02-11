@@ -1,4 +1,4 @@
-import { email, name, password } from '../utils/schema.util';
+import { email, name, password, profile } from '../utils/schema.util';
 
 const schema = (props: any) => {
     return {
@@ -19,7 +19,7 @@ const looseSchema = (props: any) => {
             ...props,
         },
         required: ['email'],
-        anyOf: [{ required: ['name'] }],
+        anyOf: [{ required: ['name'] }, { required: ['profile'] }],
     };
 };
 
@@ -52,6 +52,7 @@ const findOne = {
                     properties: {
                         name: { type: 'string' },
                         email: { type: 'string' },
+                        profile: { type: 'string' },
                     },
                 },
                 message: { type: 'string' },
@@ -63,7 +64,7 @@ const findOne = {
 const update = {
     summary: 'update an existing user',
     consumes: ['application/json'],
-    body: looseSchema({ name }),
+    body: looseSchema({ name, profile }),
     response: {
         200: {
             type: 'object',

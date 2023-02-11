@@ -26,7 +26,9 @@ function ajvPlugin(ajv, options) {
 //const app = fastify({ logger: true, ajv: { plugins: [ajvPlugin] } });
 
 const app = fastify({ logger: true });
-app.register(cors);
+app.register(cors, {
+    origin: [`${process.env.CLIENT}`, `${process.env.CLIENT2}`],
+});
 app.register(fastifyCookie, {
     hook: 'onRequest',
     parseOptions: {},
@@ -37,6 +39,7 @@ mongoose.connect(`${process.env.DB_CONNECTION}`);
 app.register(fastifyjwt, {
     secret: `${process.env.REFRESH_TOKEN_SECRET}`,
     namespace: 'refresh',
+    cookie: { cookieName: 'jid', signed: false },
 });
 app.register(fastifyjwt, {
     secret: `${process.env.ACCESS_TOKEN_SECRET}`,

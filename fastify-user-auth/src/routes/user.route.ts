@@ -7,6 +7,7 @@ const app = (fastify: any, options: any, done: any) => {
         schema: UserSchema.store,
         handler: UserController.store,
     });
+
     fastify.get(`/users`, {
         schema: UserSchema.findOne,
         handler: UserController.findOne,
@@ -16,7 +17,6 @@ const app = (fastify: any, options: any, done: any) => {
         schema: UserSchema.update,
         preHandler: AuthMiddleware.auth,
         handler: UserController.update,
-        
     });
     done();
 };

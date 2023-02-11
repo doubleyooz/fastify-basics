@@ -38,16 +38,17 @@ const signIn = async (req: any, reply: any) => {
     });
 
     req.headers.authorization = `Bearer ${token}`;
-    console.log(refreshToken);
 
     reply.setCookie('jid', refreshToken, {
         domain: '',
         path: '/',
         httpOnly: true,
     });
-    console.log('here2');
 
-    reply.code(200).send({ message: 'Successful login.', accessToken: token });
+    reply.code(200).send({
+        message: 'Successful login.',
+        accessToken: token,
+    });
     return reply;
 };
 
@@ -94,4 +95,51 @@ const revokeRefreshToken = async (req: any, reply: any) => {
         });
 };
 
-export default { signIn, revokeRefreshToken };
+const refreshAccessToken = async (req: any, reply: any) => {
+    const refreshToken = req.cookies.jid;
+
+    if (!refreshToken) {
+        return reply.code(401).send({
+            message: 'Unauthorized request.',
+        });
+    }
+
+    let payload: any = null;
+    console.log(refreshToken);
+    try {
+        payload = await req.refreshJwtVerify(refreshToken);
+    } catch (err) {
+        console.log(err);
+        return reply.code(401).send({
+            message: 'Unauthorized request.',
+        });
+    }
+    console.log('AUTH CONTROLLER');
+    console.log(payload);
+    if (!payload)
+        return reply.code(401).send({
+            message: 'Unauthorized request.',
+        });
+
+    const doesUserExists = await User.exists({
+        _id: payload._id,
+        tokenVerson: payload.Version,
+    });
+
+    if (!doesUserExists)
+        return reply.code(401).send({
+            message: 'Unauthorized request.',
+        });
+
+    const accessToken = await reply.accessJwtSign({
+        _id: payload._id,
+        tokenVersion: payload.tokenVersion,
+    });
+
+    return reply.code(200).send({
+        accessToken: accessToken,
+        message: 'Successful request.',
+    });
+};
+
+export default { refreshAccessToken, revokeRefreshToken, signIn };
