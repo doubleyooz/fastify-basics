@@ -1,7 +1,8 @@
+import { FastifyInstance, FastifyPluginCallback, FastifyPluginOptions } from 'fastify';
 import AuthController from '../controllers/auth.controller';
 import AuthSchema from '../schemas/auth.schema';
 
-const app = (fastify: any, options: any, done: any) => {
+const app: FastifyPluginCallback = (fastify: FastifyInstance, options: FastifyPluginOptions, done: () => void) => {
     fastify.get(`/sign-in`, {
         schema: AuthSchema.signIn,
         handler: AuthController.signIn,

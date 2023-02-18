@@ -1,6 +1,6 @@
-import fastify from 'fastify';
+import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import mongoose from 'mongoose';
-import fastifyjwt from '@fastify/jwt';
+import fastifyjwt, { VerifyOptions, FastifyJwtSignOptions } from '@fastify/jwt';
 import fastifyCookie, { FastifyCookieOptions } from '@fastify/cookie';
 import cors from '@fastify/cors';
 
@@ -8,22 +8,35 @@ import appRoute from '../routes/app.route';
 import userRoute from '../routes/user.route';
 import authRoute from '../routes/auth.route';
 
-//import swaggerConfig from './swagger.config';
-/*
-function ajvPlugin(ajv, options) {
-    ajv.addKeyword('isFileType', {
-        compile: (schema, parent, it) => {
-            // Change the schema type, as this is post validation it doesn't appear to error.
-            parent.type = 'file';
-            delete parent.isFileType;
-            return () => true;
-        },
-    });
-
-    return ajv;
-}*/
+import { Payload } from '../utils/auth.util';
 
 //const app = fastify({ logger: true, ajv: { plugins: [ajvPlugin] } });
+
+declare module 'fastify' {
+    interface FastifyRequest {
+        accessJwtVerify(
+            token: string,
+            options?: VerifyOptions,
+        ): Promise<Payload>;
+        refreshJwtVerify(
+            token: string,
+            options?: VerifyOptions,
+        ): Promise<Payload>;
+        auth: string;
+        newToken: string;
+    }
+    export interface FastifyReply {
+        accessJwtSign(
+            payload: string | object | Buffer,
+            options?: FastifyJwtSignOptions | undefined,
+        ): Promise<string>;
+
+        refreshJwtSign(
+            payload: string | object | Buffer,
+            options?: FastifyJwtSignOptions | undefined,
+        ): Promise<string>;
+    }
+}
 
 const app = fastify({ logger: true });
 app.register(cors, {
@@ -45,6 +58,7 @@ app.register(fastifyjwt, {
 app.register(fastifyjwt, {
     secret: `${process.env.ACCESS_TOKEN_SECRET}`,
     namespace: 'access',
+    decode: { complete: true },
 });
 app.register(appRoute);
 app.register(userRoute);

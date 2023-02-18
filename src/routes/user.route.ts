@@ -1,8 +1,9 @@
+import { FastifyInstance, FastifyPluginCallback, FastifyPluginOptions } from 'fastify';
 import UserController from '../controllers/user.controller';
 import AuthMiddleware from '../middlewares/auth.middleware';
 import UserSchema from '../schemas/user.schema';
 
-const app = (fastify: any, options: any, done: any) => {
+const app: FastifyPluginCallback = (fastify: FastifyInstance, options: FastifyPluginOptions, done: () => void) => {
     fastify.post(`/users`, {
         schema: UserSchema.store,
         handler: UserController.store,

@@ -8,6 +8,14 @@ export interface IUser extends Document {
     tokenVersion?: number;
 }
 
+export interface LooseIUser {
+    email?: string;
+    password?: string;
+    name?: string;
+    profile?: string;
+    tokenVersion?: number;
+}
+
 const UserSchema: Schema = new Schema(
     {
         email: { type: String, unique: true, required: true },

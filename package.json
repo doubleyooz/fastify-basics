@@ -7,7 +7,7 @@
     "license": "MIT",
     "scripts": {
         "build": "tsc -p tsconfig.json",
-        "start": "set NODE_ENV=dev && nodemon -r dotenv/config src/index.ts"
+        "start": "nodemon -r dotenv/config src/index.ts"
     },
     "dependencies": {
         "@fastify/cookie": "^8.3.0",
