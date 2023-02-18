@@ -1,18 +1,18 @@
+import { FastifyRequest, FastifyReply } from 'fastify';
 import User, { IUser } from '../models/user.model';
-const auth = async (req: any, reply: any) => {
+import { Payload } from '../utils/auth.util';
+
+const auth = async (req: FastifyRequest, reply: FastifyReply) => {
     console.log('middleman');
-    if (!req.headers.authorization) {
-        return reply.code(401).send({
-            message: 'Unauthorized',
-        });
-    }
+
     const [, token] = req.headers.authorization
         ? req.headers.authorization.split(' ')
         : [, ''];
 
-    let payload: any = null;
+    let payload: Payload | null = null;
     try {
         payload = await req.accessJwtVerify(token);
+        if (!payload) throw new Error();
     } catch (err) {
         if (err instanceof Error)
             return reply.code(401).send({
@@ -37,7 +37,7 @@ const auth = async (req: any, reply: any) => {
 
     req.auth = payload._id;
 
-    let current_time = Date.now().valueOf() / 1000;
+    const current_time = Date.now().valueOf() / 1000;
 
     if ((payload.exp - payload.iat) / 2 > payload.exp - current_time) {
         const newToken = await reply.accessJwtSign({
@@ -46,7 +46,7 @@ const auth = async (req: any, reply: any) => {
             exp: Math.floor(Date.now() / 1000) + 60 * 15, // 15 minutes
         });
 
-        req.new_token = `${newToken}`;
+        req.newToken = `${newToken}`;
         console.log(`New Token: ${newToken}`);
     }
     console.log('shall pass');

@@ -1,8 +1,10 @@
+import { FastifyReply, FastifyRequest } from 'fastify';
 import User, { IUser } from '../models/user.model';
+import { Payload } from '../utils/auth.util';
 import { matchPassword } from '../utils/password.util';
 
-const signIn = async (req: any, reply: any) => {
-    const [hashType, hash] = req.headers.authorization.split(' ');
+const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
+    const [hashType, hash] = req.headers?.authorization?.split(' ') ?? ['', ''];
 
     if (hashType !== 'Basic') {
         return reply.code(401).send({ message: 'Unauthorized Request' });
@@ -52,50 +54,37 @@ const signIn = async (req: any, reply: any) => {
     return reply;
 };
 
-const revokeRefreshToken = async (req: any, reply: any) => {
+const revokeRefreshToken = async (req: FastifyRequest, reply: FastifyReply) => {
     const refreshToken = req.cookies.jid;
 
     if (!refreshToken) return reply.code(401).send({ message: 'Unauthorized' });
 
-    let payload: any = null;
+    let payload: Payload | null = null;
 
     try {
-        payload = req.accessJwtVerify(refreshToken);
+        payload = await req.accessJwtVerify(refreshToken);
     } catch (err) {
         return reply.code(401).send({ message: 'Unauthorized.' });
     }
 
     if (!payload) return reply.code(401).send({ message: 'Unauthorized.' });
 
-    User.findById(payload._id)
-        .then(user => {
-            if (user) {
-                user.tokenVersion! += 1;
-                user.save()
-                    .then(result => {
-                        return reply.code(200).send({
-                            message: 'Successful Request.',
-                        });
-                    })
-                    .catch(err => {
-                        return reply.code(500).send({
-                            message: "It's not you it's us.",
-                        });
-                    });
-            } else {
-                return reply.code(401).send({
-                    message: 'Unauthorized',
-                });
-            }
-        })
-        .catch(err => {
-            return reply.code(401).send({
-                message: 'Unauthorized',
-            });
-        });
+    const user = await User.findById(payload._id);
+
+    if (!user) {
+        return reply.code(401).send({ message: 'Unauthorized' });
+    }
+
+    user.tokenVersion! += 1;
+    try {
+        await user.save();
+        return reply.code(200).send({ message: 'Successful Request.' });
+    } catch (err) {
+        return reply.code(500).send({ message: "It's not you it's us." });
+    }
 };
 
-const refreshAccessToken = async (req: any, reply: any) => {
+const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     const refreshToken = req.cookies.jid;
 
     if (!refreshToken) {
@@ -104,7 +93,7 @@ const refreshAccessToken = async (req: any, reply: any) => {
         });
     }
 
-    let payload: any = null;
+    let payload: Payload | null = null;
     console.log(refreshToken);
     try {
         payload = await req.refreshJwtVerify(refreshToken);
@@ -123,7 +112,7 @@ const refreshAccessToken = async (req: any, reply: any) => {
 
     const doesUserExists = await User.exists({
         _id: payload._id,
-        tokenVerson: payload.Version,
+        tokenVerson: payload.tokenVersion,
     });
 
     if (!doesUserExists)

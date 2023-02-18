@@ -1,17 +1,6 @@
-import { email, name, password, profile } from '../utils/schema.util';
+import { email, name, password, profile, schema } from '../utils/schema.util';
 
-const schema = (props: any) => {
-    return {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-            ...props,
-        },
-        required: [...Object.keys(props)],
-    };
-};
-
-const looseSchema = (props: any) => {
+const looseSchema = (props: Record<string, any>) => {
     return {
         type: 'object',
         additionalProperties: false,

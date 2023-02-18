@@ -1,15 +1,4 @@
-import { email, password, Authorization } from '../utils/schema.util';
-
-const schema = (props: any) => {
-    return {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-            ...props,
-        },
-        required: [...Object.keys(props)],
-    };
-};
+import { email, password, Authorization, schema } from '../utils/schema.util';
 
 const signIn = {
     summary:

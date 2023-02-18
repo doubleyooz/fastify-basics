@@ -1,3 +1,15 @@
+export const schema = (props: Record<string, any>) => {
+    return {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+            ...props,
+        },
+        required: [...Object.keys(props)],
+    };
+};
+
+
 export const email = {
     type: 'string',
     pattern:
@@ -7,7 +19,6 @@ export const email = {
 export const password = {
     type: 'string',
     pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$',
-    //pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})'
 };
 
 export const name = {

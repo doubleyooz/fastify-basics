@@ -1,18 +1,32 @@
-const app = (fastify: any, options: any, done: any) => {
+import {
+    FastifyInstance,
+    FastifyPluginCallback,
+    FastifyPluginOptions,
+    FastifyReply,
+    FastifyRequest,
+} from 'fastify';
+
+const app: FastifyPluginCallback = (
+    fastify: FastifyInstance,
+    options: FastifyPluginOptions,
+    done: () => void,
+) => {
     fastify.get(`/`, {
         schema: {
             response: {
                 200: {
-                    type: 'string',
-                    data: 'Hello World!',
+                    type: 'object',
+                    properties: {
+                        message: { type: 'string', pattern: '^Hello World!$' },
+                    },
                 },
             },
         },
-        handler: (req: any, reply: any) => {
-            return reply.send('Hello World!');
+        handler: (req: FastifyRequest, reply: FastifyReply) => {
+            return reply.send('Hello dWorld');
         },
     });
     done();
 };
 
-export default app
+export default app;
