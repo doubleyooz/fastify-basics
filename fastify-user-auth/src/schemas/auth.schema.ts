@@ -9,7 +9,21 @@ const signIn = {
         200: {
             type: 'object',
             properties: {
-                accessToken: { type: 'string' },
+                data: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string' },
+                        email: { type: 'string' },
+                        profile: { type: 'string' },
+                    },
+                },
+                metadata: {
+                    type: 'object',
+                    properties: {
+                        accessToken: { type: 'string' },
+                    },
+                },
+
                 message: { type: 'string' },
             },
         },

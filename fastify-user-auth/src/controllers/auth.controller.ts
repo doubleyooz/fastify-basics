@@ -15,6 +15,8 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
         .split(':');
 
     const user = await User.findOne({ email: email }).select([
+        'name',
+        'profile',
         'password',
         'tokenVersion',
     ]);
@@ -47,9 +49,17 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
         httpOnly: true,
     });
 
+    console.log(user);
     reply.code(200).send({
         message: 'Successful login.',
-        accessToken: token,
+        data: {
+            profile: user?.profile,
+            email: email,
+            name: user?.name,
+        },
+        metadata: {
+            accessToken: token,
+        },
     });
     return reply;
 };
