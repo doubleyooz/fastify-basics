@@ -17,13 +17,13 @@ const app: FastifyPluginCallback = (
                 200: {
                     type: 'object',
                     properties: {
-                        message: { type: 'string', pattern: '^Hello World!$' },
+                        data: { type: 'string', pattern: '^Hello World!$' },
                     },
                 },
             },
         },
         handler: (req: FastifyRequest, reply: FastifyReply) => {
-            return reply.send('Hello dWorld');
+            return reply.send({ data: 'Hello World' });
         },
     });
     done();

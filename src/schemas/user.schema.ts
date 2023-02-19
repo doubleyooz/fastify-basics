@@ -7,7 +7,6 @@ const looseSchema = (props: Record<string, any>) => {
         properties: {
             ...props,
         },
-        required: ['email'],
         anyOf: [{ required: ['name'] }, { required: ['profile'] }],
     };
 };
