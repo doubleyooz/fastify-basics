@@ -12,7 +12,7 @@ const store = async (req: FastifyRequest, reply: FastifyReply) => {
             email: email,
             password: await hashPassword(password),
             name: name,
-            profile: randomPic(),
+            profile: await randomPic(),
         });
 
         const result = await newUser.save();
@@ -65,6 +65,8 @@ const update = async (req: FastifyRequest, reply: FastifyReply) => {
     const { newToken, auth } = req;
     const metadata = newToken ? { accessToken: newToken } : {};
     const body = req.body as UpdateQuery<LooseIUser>;
+
+    if (body.profile) body.profile = await randomPic();
     try {
         const result = await User.updateOne({ _id: auth }, body);
         if (result.matchedCount === 0) {
