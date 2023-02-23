@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export const schema = (props: Record<string, any>) => {
     return {
         type: 'object',
@@ -9,11 +11,28 @@ export const schema = (props: Record<string, any>) => {
     };
 };
 
+export const IsObjectId = (value: string) => {
+    try {
+        new Types.ObjectId(value);
+        return true;
+    } catch (error) {
+        return false;
+    }
+};
+
+const emailPattern =
+    "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
+const objectIdPattern = '^[0-9a-f]{24}$';
 
 export const email = {
     type: 'string',
-    pattern:
-        "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+    pattern: emailPattern,
+};
+
+export const emailOrId = {
+    type: 'string',
+    pattern: `${emailPattern}|${objectIdPattern}`,
 };
 
 export const password = {
@@ -25,6 +44,7 @@ export const name = {
     type: 'string',
     minLength: 3,
     maxLength: 15,
+    pattern: '^[A-Za-z]+$'
 };
 
 export const profile = {
