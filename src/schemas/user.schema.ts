@@ -5,6 +5,7 @@ import {
     password,
     profile,
     schema,
+    user,
 } from '../utils/schema.util';
 
 const looseSchema = (
@@ -48,11 +49,7 @@ const findOne = {
             properties: {
                 data: {
                     type: 'object',
-                    properties: {
-                        name: { type: 'string' },
-                        email: { type: 'string' },
-                        profile: { type: 'string' },
-                    },
+                    properties: user,
                 },
                 message: { type: 'string' },
             },
@@ -73,11 +70,7 @@ const find = {
                     type: 'array',
                     items: {
                         type: 'object',
-                        properties: {
-                            name: { type: 'string' },
-                            email: { type: 'string' },
-                            profile: { type: 'string' },
-                        },
+                        properties: user,
                         required: ['name', 'email', 'profile'],
                     },
                 },

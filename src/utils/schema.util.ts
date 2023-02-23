@@ -20,6 +20,13 @@ export const IsObjectId = (value: string) => {
     }
 };
 
+export const user = {
+    name: { type: 'string' },
+    email: { type: 'string' },
+    profile: { type: 'string' },
+    _id: { type: 'string' },
+};
+
 const emailPattern =
     "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
@@ -44,7 +51,7 @@ export const name = {
     type: 'string',
     minLength: 3,
     maxLength: 15,
-    pattern: '^[A-Za-z]+$'
+    pattern: '^[A-Za-z]+$',
 };
 
 export const profile = {
