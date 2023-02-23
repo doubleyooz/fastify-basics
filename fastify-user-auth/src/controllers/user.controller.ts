@@ -1,17 +1,25 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { UpdateQuery } from 'mongoose';
+import { Types, UpdateQuery } from 'mongoose';
 import User, { IUser, LooseIUser } from '../models/user.model';
 import { hashPassword } from '../utils/password.util';
 import { randomPic } from '../utils/picture.util';
+import { IsObjectId } from '../utils/schema.util';
 
 const store = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
         const { email, password, name }: IUser = req.body as IUser;
 
+        const trimmedName = name.trim();
+        if (trimmedName.length < 3)
+            return reply.code(400).send({
+                message: 'Bad Request',
+                err: 'Trimmed name is too small!',
+            });
+
         const newUser: IUser = new User({
             email: email,
             password: await hashPassword(password),
-            name: name,
+            name: trimmedName,
             profile: await randomPic(),
         });
 
@@ -42,13 +50,16 @@ const store = async (req: FastifyRequest, reply: FastifyReply) => {
 
 const findOne = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
-        const { email } = req.query as { email: string };
+        const { _id } = req.params as { _id: string };
 
-        if (!email) {
-            return reply.code(400).send({ message: 'Email is required' });
+        if (!_id) {
+            return reply
+                .code(400)
+                .send({ message: 'Email or _id is required' });
         }
+        const search = IsObjectId(_id) ? { _id: _id } : { email: _id };
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne(search);
 
         if (!user) {
             return reply.code(404).send({ message: 'User not found' });
@@ -61,10 +72,32 @@ const findOne = async (req: FastifyRequest, reply: FastifyReply) => {
     }
 };
 
+const find = async (req: FastifyRequest, reply: FastifyReply) => {
+    try {
+        const { name } = req.query as { name: string };
+        const search = name ? { name: { $regex: name, $options: 'i' } } : {};
+
+        const user = await User.find(search);
+        console.log(user);
+
+        return reply.code(200).send({ message: 'User retrieved.', data: user });
+    } catch (err) {
+        console.log(err);
+        return reply.code(500).send({ error: err });
+    }
+};
+
 const update = async (req: FastifyRequest, reply: FastifyReply) => {
     const { newToken, auth } = req;
     const metadata = newToken ? { accessToken: newToken } : {};
     const body = req.body as UpdateQuery<LooseIUser>;
+
+    body.name = body.name.trim();
+    if (body.name.length < 3)
+        return reply.code(400).send({
+            message: 'Bad Request',
+            err: 'Trimmed name is too small!',
+        });
 
     if (body.profile) body.profile = await randomPic();
     try {
@@ -82,4 +115,4 @@ const update = async (req: FastifyRequest, reply: FastifyReply) => {
     return reply;
 };
 
-export default { store, findOne, update };
+export default { store, find, findOne, update };

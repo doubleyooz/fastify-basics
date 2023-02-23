@@ -1,13 +1,26 @@
-import { email, name, password, profile, schema } from '../utils/schema.util';
+import {
+    email,
+    emailOrId,
+    name,
+    password,
+    profile,
+    schema,
+    user,
+} from '../utils/schema.util';
 
-const looseSchema = (props: Record<string, any>) => {
+const looseSchema = (
+    props: Record<string, any>,
+    requiredProperties?: {
+        required: string[];
+    }[],
+) => {
     return {
         type: 'object',
         additionalProperties: false,
         properties: {
             ...props,
         },
-        anyOf: [{ required: ['name'] }, { required: ['profile'] }],
+        anyOf: requiredProperties,
     };
 };
 
@@ -29,21 +42,38 @@ const store = {
 const findOne = {
     summary: 'returns a user from the database',
     consumes: ['application/json'],
-
-    querystring: schema({ email: email }),
+    params: schema({ _id: emailOrId }),
     response: {
         200: {
             type: 'object',
             properties: {
                 data: {
                     type: 'object',
-                    properties: {
-                        name: { type: 'string' },
-                        email: { type: 'string' },
-                        profile: { type: 'string' },
-                    },
+                    properties: user,
                 },
                 message: { type: 'string' },
+            },
+        },
+    },
+};
+
+const find = {
+    summary: 'returns users from the database',
+    consumes: ['application/json'],
+
+    querystring: looseSchema({ name: name }),
+    response: {
+        200: {
+            type: 'object',
+            properties: {
+                data: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: user,
+                        required: ['name', 'email', 'profile'],
+                    },
+                },
             },
         },
     },
@@ -52,7 +82,10 @@ const findOne = {
 const update = {
     summary: 'update an existing user',
     consumes: ['application/json'],
-    body: looseSchema({ name, profile }),
+    body: looseSchema({ name, profile }, [
+        { required: ['name'] },
+        { required: ['profile'] },
+    ]),
     response: {
         200: {
             type: 'object',
@@ -64,4 +97,4 @@ const update = {
     },
 };
 
-export default { store, findOne, update };
+export default { store, find, findOne, update };

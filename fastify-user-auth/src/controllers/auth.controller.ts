@@ -72,7 +72,7 @@ const revokeRefreshToken = async (req: FastifyRequest, reply: FastifyReply) => {
     let payload: Payload | null = null;
 
     try {
-        payload = await req.accessJwtVerify(refreshToken);
+        payload = await req.refreshJwtVerify(refreshToken);
     } catch (err) {
         return reply.code(401).send({ message: 'Unauthorized.' });
     }
@@ -122,7 +122,7 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
 
     const doesUserExists = await User.exists({
         _id: payload._id,
-        tokenVerson: payload.tokenVersion,
+        tokenVersion: payload.tokenVersion,
     });
 
     if (!doesUserExists)
