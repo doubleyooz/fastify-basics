@@ -97,7 +97,10 @@ const revokeRefreshToken = async (req: FastifyRequest, reply: FastifyReply) => {
 const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     const refreshToken = req.cookies.jid;
 
+   
     if (!refreshToken) {
+        console.log(req.cookies.jid);
+        console.log(req.cookies);
         return reply.code(401).send({
             message: 'Unauthorized request.',
         });
