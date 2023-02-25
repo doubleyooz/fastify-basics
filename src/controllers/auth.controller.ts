@@ -44,8 +44,7 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
     req.headers.authorization = `Bearer ${token}`;
 
     reply.setCookie('jid', refreshToken, {
-        domain: '',
-        path: '/',
+        path: '/refresh-token',
         httpOnly: true,
     });
 
@@ -97,7 +96,6 @@ const revokeRefreshToken = async (req: FastifyRequest, reply: FastifyReply) => {
 const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     const refreshToken = req.cookies.jid;
 
-   
     if (!refreshToken) {
         console.log(req.cookies.jid);
         console.log(req.cookies);
