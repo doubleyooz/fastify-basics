@@ -44,7 +44,6 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
     req.headers.authorization = `Bearer ${token}`;
 
     reply.setCookie('jid', refreshToken, {
-        domain: `${process.env.CLIENT?.split('//')[1]}`,
         sameSite: 'none',
         path: '/refresh-token',
         httpOnly: true,
@@ -108,6 +107,7 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     }
 
     let payload: Payload | null = null;
+    console.log(refreshToken);
     console.log(refreshToken);
     try {
         payload = await req.refreshJwtVerify(refreshToken);
