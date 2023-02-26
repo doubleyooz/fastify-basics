@@ -48,6 +48,7 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
         sameSite: 'none',
         path: '/refresh-token',
         httpOnly: true,
+        secure: true,
     });
 
     console.log(user);
