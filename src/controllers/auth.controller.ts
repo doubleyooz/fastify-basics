@@ -16,7 +16,7 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
 
     const user = await User.findOne({ email: email }).select([
         'name',
-        'profile',
+        'picture',
         'password',
         'tokenVersion',
     ]);
@@ -50,14 +50,19 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
         secure: true,
     });
 
+    reply.setCookie('jid', refreshToken, {
+        sameSite: 'none',
+        path: '/revoke-token',
+        httpOnly: true,
+        secure: true,
+    });
+
     console.log(user);
     reply.code(200).send({
-        message: 'Successful login.',
         data: {
-            profile: user?.profile,
-            email: email,
-            name: user?.name,
+            _id: user?._id,
         },
+        message: 'Successful login.',
         metadata: {
             accessToken: token,
         },
@@ -108,7 +113,7 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
 
     let payload: Payload | null = null;
     console.log(refreshToken);
-    console.log(refreshToken);
+
     try {
         payload = await req.refreshJwtVerify(refreshToken);
     } catch (err) {
@@ -140,7 +145,8 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 
     return reply.code(200).send({
-        accessToken: accessToken,
+        data: { _id: payload._id },
+        metadata: { accessToken },
         message: 'Successful request.',
     });
 };
