@@ -54,6 +54,13 @@ export const name = {
     pattern: '^[A-Za-z]+$',
 };
 
+export const nameParam = {
+    type: 'string',
+    minLength: 1,
+    maxLength: 15,
+    pattern: '^[A-Za-z]+$',
+};
+
 export const picture = {
     type: 'string',
 };

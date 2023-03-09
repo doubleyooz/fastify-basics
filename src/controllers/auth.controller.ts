@@ -28,7 +28,6 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
             message: 'Unauthorized request.',
         });
     }
-
     const token = await reply.accessJwtSign({
         _id: user?._id,
         tokenVersion: user?.tokenVersion,
@@ -57,7 +56,6 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
         secure: true,
     });
 
-    console.log(user);
     reply.code(200).send({
         data: {
             _id: user?._id,

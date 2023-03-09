@@ -2,6 +2,7 @@ import {
     email,
     emailOrId,
     name,
+    nameParam,
     password,
     picture,
     schema,
@@ -60,8 +61,7 @@ const findOne = {
 const find = {
     summary: 'returns users from the database',
     consumes: ['application/json'],
-
-    querystring: looseSchema({ name: name }),
+    querystring: looseSchema({ name: nameParam }),
     response: {
         200: {
             type: 'object',

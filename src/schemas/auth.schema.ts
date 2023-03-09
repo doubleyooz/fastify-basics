@@ -11,7 +11,7 @@ const signIn = {
             properties: {
                 data: {
                     type: 'object',
-                    _properties: {
+                    properties: {
                         _id: {
                             type: 'string',
                         },
