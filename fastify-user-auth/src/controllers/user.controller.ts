@@ -20,7 +20,7 @@ const store = async (req: FastifyRequest, reply: FastifyReply) => {
             email: email,
             password: await hashPassword(password),
             name: trimmedName,
-            profile: await randomPic(),
+            picture: await randomPic(),
         });
 
         const result = await newUser.save();
@@ -28,7 +28,7 @@ const store = async (req: FastifyRequest, reply: FastifyReply) => {
         return reply.code(201).send({
             data: {
                 email: result.email,
-                name: result.profile,
+                name: result.picture,
                 _id: result._id,
             },
             message: 'User created!',
@@ -64,7 +64,7 @@ const findOne = async (req: FastifyRequest, reply: FastifyReply) => {
         if (!user) {
             return reply.code(404).send({ message: 'User not found' });
         }
-
+        console.log(user);
         return reply.code(200).send({ message: 'User retrieved.', data: user });
     } catch (err) {
         console.log(err);
@@ -99,7 +99,7 @@ const update = async (req: FastifyRequest, reply: FastifyReply) => {
             err: 'Trimmed name is too small!',
         });
 
-    if (body.profile) body.profile = await randomPic();
+    if (body.picture) body.picture = await randomPic();
     try {
         const result = await User.updateOne({ _id: auth }, body);
         if (result.matchedCount === 0) {

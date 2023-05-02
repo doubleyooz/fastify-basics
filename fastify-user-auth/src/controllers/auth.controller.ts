@@ -16,7 +16,7 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
 
     const user = await User.findOne({ email: email }).select([
         'name',
-        'profile',
+        'picture',
         'password',
         'tokenVersion',
     ]);
@@ -28,7 +28,6 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
             message: 'Unauthorized request.',
         });
     }
-
     const token = await reply.accessJwtSign({
         _id: user?._id,
         tokenVersion: user?.tokenVersion,
@@ -44,19 +43,24 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
     req.headers.authorization = `Bearer ${token}`;
 
     reply.setCookie('jid', refreshToken, {
-        domain: '',
-        path: '/',
+        sameSite: 'none',
+        path: '/refresh-token',
         httpOnly: true,
+        secure: true,
     });
 
-    console.log(user);
+    reply.setCookie('jid', refreshToken, {
+        sameSite: 'none',
+        path: '/revoke-token',
+        httpOnly: true,
+        secure: true,
+    });
+
     reply.code(200).send({
-        message: 'Successful login.',
         data: {
-            profile: user?.profile,
-            email: email,
-            name: user?.name,
+            _id: user?._id,
         },
+        message: 'Successful login.',
         metadata: {
             accessToken: token,
         },
@@ -98,6 +102,8 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     const refreshToken = req.cookies.jid;
 
     if (!refreshToken) {
+        console.log(req.cookies.jid);
+        console.log(req.cookies);
         return reply.code(401).send({
             message: 'Unauthorized request.',
         });
@@ -105,6 +111,7 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
 
     let payload: Payload | null = null;
     console.log(refreshToken);
+
     try {
         payload = await req.refreshJwtVerify(refreshToken);
     } catch (err) {
@@ -136,7 +143,8 @@ const refreshAccessToken = async (req: FastifyRequest, reply: FastifyReply) => {
     });
 
     return reply.code(200).send({
-        accessToken: accessToken,
+        data: { _id: payload._id },
+        metadata: { accessToken },
         message: 'Successful request.',
     });
 };

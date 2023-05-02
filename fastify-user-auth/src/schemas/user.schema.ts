@@ -2,8 +2,9 @@ import {
     email,
     emailOrId,
     name,
+    nameParam,
     password,
-    profile,
+    picture,
     schema,
     user,
 } from '../utils/schema.util';
@@ -60,8 +61,7 @@ const findOne = {
 const find = {
     summary: 'returns users from the database',
     consumes: ['application/json'],
-
-    querystring: looseSchema({ name: name }),
+    querystring: looseSchema({ name: nameParam }),
     response: {
         200: {
             type: 'object',
@@ -71,7 +71,7 @@ const find = {
                     items: {
                         type: 'object',
                         properties: user,
-                        required: ['name', 'email', 'profile'],
+                        required: ['name', 'email', 'picture'],
                     },
                 },
             },
@@ -82,9 +82,9 @@ const find = {
 const update = {
     summary: 'update an existing user',
     consumes: ['application/json'],
-    body: looseSchema({ name, profile }, [
+    body: looseSchema({ name, picture }, [
         { required: ['name'] },
-        { required: ['profile'] },
+        { required: ['picture'] },
     ]),
     response: {
         200: {
