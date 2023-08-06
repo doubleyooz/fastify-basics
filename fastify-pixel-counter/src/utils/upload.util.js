@@ -21,7 +21,7 @@ export const writeFile = (filename, data) => {
         data,
         { flag: 'wx', encoding: 'binary' },
         err => {
-            if (err) writeFile(cutString(filename) + filename, data);
+            if (err) fs.writeFile(cutString(filename) + filename, data);
         },
     );
 
