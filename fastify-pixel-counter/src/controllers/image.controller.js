@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'crypto';
-import { ensureDir, writeFile } from '../utils/upload.util.js';
+import { ensureDir, removeFile, writeFile } from '../utils/upload.util.js';
 
 const upload = async (req, reply) => {
     ensureDir();
@@ -19,9 +19,9 @@ const upload = async (req, reply) => {
     });
 };
 
-const remove = async () => {
-    console.log('I will remove a file');
-    return reply.send({ data: 'I will remove a file' });
+const remove = async (req, reply) => {
+    const { filename } = req.body;
+    return reply.code((await removeFile(filename)) ? 200 : 404).send();
 };
 
 export default { upload, remove };

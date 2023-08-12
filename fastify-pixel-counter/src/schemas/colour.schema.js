@@ -14,17 +14,9 @@ const colourArray = {
 const imageId = {
     type: 'string',
     pattern: '^[A-Za-z0-9]+.(png|jpg|jpeg){1}$',
-    minLength: 39,
+    minLength: 38,
     maxLength: 54,
     description: 'A randomly generated unique id with the file extension',
-};
-
-const imageId2 = {
-    type: 'string',
-    pattern: '^[A-Za-z0-9]+$',
-    minLength: 35,
-    maxLength: 50,
-    description: 'A randomly generated unique id',
 };
 
 const body = props => {

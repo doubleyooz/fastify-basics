@@ -15,6 +15,30 @@ export const ensureDir = () => {
 };
 export const readFile = filename => rf(dir + filename);
 
+export const removeFile = async filename => {
+    const temp = async mimetype => {
+        return new Promise((resolve, reject) => {
+            fs.rm(dir + filename + mimetype, err => {
+                if (err) {
+                    console.error('Error removing file:', err);
+                    reject(false);
+                } else {
+                    console.log('File removed successfully');
+                    resolve(true);
+                }
+            });
+        });
+    };
+
+    if (fs.existsSync(dir + filename + '.jpg')) {
+        return temp('.jpg');
+    } else if (fs.existsSync(dir + filename + '.png')) {
+        return temp('.png');
+    } else if (fs.existsSync(dir + filename + '.jpeg')) {
+        return temp('.jpeg');
+    } else return false;
+};
+
 export const writeFile = (filename, data) => {
     fs.writeFile(
         dir + filename,
