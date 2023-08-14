@@ -1,3 +1,5 @@
+import { schema } from '../utils/schema.util.js';
+
 const imageId2 = {
     type: 'string',
     pattern: '^[A-Za-z0-9]+$',
@@ -6,7 +8,7 @@ const imageId2 = {
     description: 'A randomly generated unique id',
 };
 
-const body = props => {
+const fileSchema = props => {
     return {
         type: 'object',
         additionalProperties: false,
@@ -18,23 +20,10 @@ const body = props => {
     };
 };
 
-const body2 = props => {
-    return {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-            file: { isFileType: true },
-            ...props,
-        },
-        required: [...Object.keys(props)],
-    };
-};
-
-
 const upload = {
     summary: 'uploads an image',
     consumes: ['multipart/form-data'],
-    body: body({}),
+    body: fileSchema({}),
     response: {
         200: {
             type: 'object',
@@ -47,7 +36,7 @@ const upload = {
 
 const remove = {
     summary: 'removes an image',
-    body: body2({ filename: imageId2 }),
+    body: schema({ filename: imageId2 }),
     response: {
         200: {
             type: 'object',

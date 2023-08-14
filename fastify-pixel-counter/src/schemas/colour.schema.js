@@ -1,3 +1,5 @@
+import { schema } from "../utils/schema.util.js";
+
 const colourArray = {
     type: 'array',
     minItems: 4,
@@ -19,21 +21,10 @@ const imageId = {
     description: 'A randomly generated unique id with the file extension',
 };
 
-const body = props => {
-    return {
-        type: 'object',
-        additionalProperties: false,
-        properties: {
-            ...props,
-        },
-        required: [...Object.keys(props)],
-    };
-};
-
 const findOne = {
     summary: 'count colour',
     consumes: ['application/json'],
-    body: body({ colour: colourArray, imageId: imageId }),
+    params: schema({ colour: colourArray, imageId: imageId }),
     response: {
         200: {
             type: 'object',
@@ -47,7 +38,7 @@ const findOne = {
 const list = {
     summary: 'list colours',
     consumes: ['application/json'],
-    body: body({ imageId: imageId }),
+    params: schema({ imageId }),
     response: {
         200: {
             type: 'object',
@@ -61,7 +52,7 @@ const list = {
 const sameColumn = {
     summary: 'same Column',
     consumes: ['application/json'],
-    body: body({
+    body: schema({
         refColour: colourArray,
         targetColour: colourArray,
         imageId: imageId,
@@ -80,7 +71,7 @@ const sameColumn = {
 const cleanImage = {
     summary: 'clean Image',
     consumes: ['multipart/form-data'],
-    body: body({
+    body: schema({
         colours: colourArray,
         backgroundColour: colourArray,
         imageId: imageId,

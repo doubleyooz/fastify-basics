@@ -38,20 +38,22 @@ const list = async (req, reply) => {
 
         const chunkSize = 4;
         let i = 0;
-
-        while (i < raw.data.length) {
+        const imageDataLength = raw.data.length;
+        while (i < imageDataLength) {
             const chunk = raw.data.slice(i, i + chunkSize);
-            let temp = new Uint16Array(chunk);
-
-            if (!colours.find(colour => arraysIdentical(colour, temp)))
-                colours.push([...temp]);
-
+            let element = JSON.stringify([...new Uint16Array(chunk)])
+            if(!colours.includes(element)){
+                colours.push(element);
+                console.log(`${i}/${imageDataLength}`)
+            }
             i += chunkSize;
+            
         }
 
+        
         return colours;
     };
-    return reply.send({ data: await fun(req.body.imageId) });
+    return reply.send({ data: await fun(req.params.imageId) });
 };
 
 const sameColumn = async (req, reply) => {

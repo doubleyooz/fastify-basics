@@ -7,7 +7,7 @@ const app = (fastify, options, done) => {
         handler: colourController.getOcurrences,
     });
 
-    fastify.post(`/colours`, {
+    fastify.get(`/colours/:imageId`, {
         schema: colourSchema.list,
         handler: colourController.list,
     });
