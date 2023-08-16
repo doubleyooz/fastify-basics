@@ -2,17 +2,17 @@ import colourController from '../controllers/colour.controller.js';
 import colourSchema from '../schemas/colour.schema.js';
 
 const app = (fastify, options, done) => {
-    fastify.post(`/colours/findOne`, {
+    fastify.get(`/image/:imageId/count`, {
         schema: colourSchema.findOne,
-        handler: colourController.getOcurrences,
+        handler: colourController.findOne,
     });
 
-    fastify.get(`/colours/:imageId`, {
+    fastify.get(`/image/:imageId/list`, {
         schema: colourSchema.list,
         handler: colourController.list,
     });
 
-    fastify.post(`/colours/sameColumn`, {
+    fastify.post(`/image/:imageId/sameColumn`, {
         schema: colourSchema.sameColumn,
         handler: colourController.sameColumn,
     });

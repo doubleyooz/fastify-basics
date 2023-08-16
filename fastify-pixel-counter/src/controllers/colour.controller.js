@@ -1,24 +1,28 @@
-import { arraysIdentical, rawFile } from '../utils/sharp.util.js';
+import { arraysIdentical, hexToRgb, rawFile } from '../utils/sharp.util.js';
 import { readFile } from '../utils/upload.util.js';
 
-const getOcurrences = async (req, reply) => {
+const chunkSize = 3;
+
+const findOne = async (req, reply) => {
     const fun = async (colour, imageId) => {
         colour = colour.map(p => parseInt(p));
-
+        colour = JSON.stringify(colour);
         let matches = 0,
             i = 0;
 
         const file = await readFile(imageId);
         const raw = await rawFile(file);
-        const chunkSize = 4;
 
-        while (i < raw.data.length) {
+        const imageDataLength = raw.data.length;
+        while (i < imageDataLength) {
             const chunk = raw.data.slice(i, i + chunkSize);
+            let element = JSON.stringify([...new Uint16Array(chunk)]);
 
-            if (arraysIdentical(colour, new Uint16Array(chunk))) {
+            if (colour === element) {
                 matches++;
-                console.log(i <= 2816 ? 2816 - 2816 - i : i % 2816);
+                console.log(`${i}/${imageDataLength}`);
             }
+
             i += chunkSize;
         }
 
@@ -26,7 +30,7 @@ const getOcurrences = async (req, reply) => {
     };
 
     return reply.send({
-        data: await fun(req.body.colour, req.body.imageId),
+        data: await fun(hexToRgb(req.query.colour), req.params.imageId),
     });
 };
 
@@ -36,21 +40,18 @@ const list = async (req, reply) => {
         const file = await readFile(imageId);
         const raw = await rawFile(file);
 
-        const chunkSize = 4;
         let i = 0;
         const imageDataLength = raw.data.length;
         while (i < imageDataLength) {
             const chunk = raw.data.slice(i, i + chunkSize);
-            let element = JSON.stringify([...new Uint16Array(chunk)])
-            if(!colours.includes(element)){
+            let element = JSON.stringify([...new Uint16Array(chunk)]);
+            if (!colours.includes(element)) {
                 colours.push(element);
-                console.log(`${i}/${imageDataLength}`)
+                console.log(`${i}/${imageDataLength}`);
             }
             i += chunkSize;
-            
         }
 
-        
         return colours;
     };
     return reply.send({ data: await fun(req.params.imageId) });
@@ -126,4 +127,4 @@ const cleanImage = async (req, reply) => {
     return reply.send({ data: temp });
 };
 
-export default { getOcurrences, list, sameColumn };
+export default { findOne, list, sameColumn };

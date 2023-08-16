@@ -13,7 +13,13 @@ const cutString = str => {
 export const ensureDir = () => {
     if (!fs.existsSync(dir)) fs.mkdirSync(dir);
 };
-export const readFile = filename => rf(dir + filename);
+export const readFile = filename => {
+    if (fs.existsSync(dir + filename + '.jpg')) {
+        return rf(dir + filename + '.jpg');
+    } else if (fs.existsSync(dir + filename + '.png')) {
+        return rf(dir + filename + '.png');
+    } else return rf(dir + filename + '.jpeg');
+};
 
 export const removeFile = async filename => {
     const temp = async mimetype => {

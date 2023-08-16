@@ -1,12 +1,6 @@
-import { schema } from '../utils/schema.util.js';
+import { schema, imageId } from '../utils/schema.util.js';
 
-const imageId2 = {
-    type: 'string',
-    pattern: '^[A-Za-z0-9]+$',
-    minLength: 34,
-    maxLength: 50,
-    description: 'A randomly generated unique id',
-};
+
 
 const fileSchema = props => {
     return {
@@ -36,7 +30,7 @@ const upload = {
 
 const remove = {
     summary: 'removes an image',
-    body: schema({ filename: imageId2 }),
+    body: schema({ filename: imageId }),
     response: {
         200: {
             type: 'object',

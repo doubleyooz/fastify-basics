@@ -1,30 +1,17 @@
-import { schema } from "../utils/schema.util.js";
+import { schema, imageId } from '../utils/schema.util.js';
 
-const colourArray = {
-    type: 'array',
-    minItems: 4,
-    maxItems: 4,
-    items: {
-        type: 'string',
-        pattern:
-            '(^[2][0-4][0-9]$|^[2][5][0-5]$|^[1][0-9][0-9]$|^[0-9][0-9]$|^[0-9]$)',
-    },
-    description:
-        'An array with four numbers from 0 to 255 representing a rgba colour. [255, 0, 0, 255]',
-};
-
-const imageId = {
+const hexColour = {
     type: 'string',
-    pattern: '^[A-Za-z0-9]+.(png|jpg|jpeg){1}$',
-    minLength: 38,
-    maxLength: 54,
-    description: 'A randomly generated unique id with the file extension',
+    pattern: '^#([A-Fa-f0-9]{6})$',
+    description:
+        'An array with four numbers from 0 to 255 representing a rgb colour. [255, 0, 255]',
 };
 
 const findOne = {
     summary: 'count colour',
     consumes: ['application/json'],
-    params: schema({ colour: colourArray, imageId: imageId }),
+    params: schema({ imageId: imageId }),
+    query: schema({ colour: hexColour }),
     response: {
         200: {
             type: 'object',
@@ -53,8 +40,8 @@ const sameColumn = {
     summary: 'same Column',
     consumes: ['application/json'],
     body: schema({
-        refColour: colourArray,
-        targetColour: colourArray,
+        refColour: hexColour,
+        targetColour: hexColour,
         imageId: imageId,
     }),
 
@@ -72,8 +59,8 @@ const cleanImage = {
     summary: 'clean Image',
     consumes: ['multipart/form-data'],
     body: schema({
-        colours: colourArray,
-        backgroundColour: colourArray,
+        colours: hexColour,
+        backgroundColour: hexColour,
         imageId: imageId,
     }),
 
