@@ -58,46 +58,50 @@ const list = async (req, reply) => {
 };
 
 const sameColumn = async (req, reply) => {
-    const { imageId, targetColour, refColour } = req.body;
-    const fun = async (file, a, b) => {
-        a = a.map(p => {
-            return parseInt(p);
-        });
-        b = b.map(p => {
-            return parseInt(p);
-        });
+    const fun = async (colour1, colour2, imageId) => {
+        colour1 = JSON.stringify(colour1);
 
+        colour2 = JSON.stringify(colour2);
         let coloursA = [],
             coloursB = [],
             i = 0;
 
+        const file = await readFile(imageId);
         const raw = await rawFile(file);
+        const imageDataLength = raw.data.length;
+        const widthValue = num => {
+            return num % raw.info.height;
+        };
 
-        const chunkSize = 4;
+        while (i < imageDataLength) {
+            const chunk = raw.data.slice(i, i + chunkSize);
+            let element = JSON.stringify([...new Uint16Array(chunk)]);
 
-        while (i < raw.data.length) {
-            let temp = new Uint16Array(raw.data.slice(i, i + chunkSize));
-            if (arraysIdentical(a, temp))
-                coloursA.push(
-                    i <= raw.info.width * 4
-                        ? raw.info.width * 4 - raw.info.width * 4 - i
-                        : (i % raw.info.width) * 4,
-                );
-            else if (arraysIdentical(b, temp))
-                coloursB.push(
-                    i <= raw.info.width * 4
-                        ? raw.info.width * 4 - raw.info.width * 4 - i
-                        : (i % raw.info.width) * 4,
-                );
+            if (colour1 === element) {
+                coloursA.push(widthValue(i));
+                console.log(`${i}/${imageDataLength}`);
+            } else if (colour2 === element) {
+                coloursB.push(widthValue(i));
+                console.log(`${i}/${imageDataLength}`);
+            }
 
             i += chunkSize;
         }
-
         return [coloursA, coloursB];
     };
-    const temp = await fun(await readFile(imageId), refColour, targetColour);
 
-    const intersection = temp[0].filter(x => temp[1].includes(x));
+    const temp = await fun(
+        hexToRgb(req.query.colour1),
+        hexToRgb(req.query.colour2),
+        req.params.imageId,
+    );
+
+    const intersection = temp[0]
+        .filter(x => temp[1].includes(x))
+        .reduce(function (acc, curr) {
+            if (!acc.includes(curr)) acc.push(curr);
+            return acc;
+        }, []);
     return reply.send({ data: intersection.length });
 };
 

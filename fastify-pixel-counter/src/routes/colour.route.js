@@ -12,7 +12,7 @@ const app = (fastify, options, done) => {
         handler: colourController.list,
     });
 
-    fastify.post(`/image/:imageId/sameColumn`, {
+    fastify.get(`/image/:imageId/sameColumn`, {
         schema: colourSchema.sameColumn,
         handler: colourController.sameColumn,
     });

@@ -39,11 +39,8 @@ const list = {
 const sameColumn = {
     summary: 'same Column',
     consumes: ['application/json'],
-    body: schema({
-        refColour: hexColour,
-        targetColour: hexColour,
-        imageId: imageId,
-    }),
+    query: schema({ colour1: hexColour, colour2: hexColour }),
+    params: schema({ imageId }),
 
     response: {
         200: {
