@@ -13,18 +13,18 @@ const signIn = async (req: FastifyRequest, reply: FastifyReply) => {
     const [email, supposedPassword] = Buffer.from(hash, 'base64')
         .toString()
         .split(':');
-
+    console.log({email, supposedPassword})
     const user = await User.findOne({ email: email }).select([
         'name',
         'picture',
         'password',
         'tokenVersion',
     ]);
-
+    console.log(user);
     const match = user ? matchPassword(user.password, supposedPassword) : false;
 
     if (!match) {
-        reply.code(401).send({
+        return reply.code(401).send({
             message: 'Unauthorized request.',
         });
     }
